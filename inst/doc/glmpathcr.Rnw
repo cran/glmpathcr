@@ -1,0 +1,141 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+% \VignetteIndexEntry{An \texttt{R} Package for Miscellaneous  Psychometric Analyses} 
+% \VignetteDepends{glmpath, glmpathcr} 
+% \VignetteKeyword{models}
+\documentclass[article, shortclass, nojss]{jss}
+\usepackage{amsmath, graphicx}
+\title{\pkg{glmpathcr}: An \proglang{R} Package for Ordinal Response Prediction in High-dimensional Data Settings}
+\author{Kellie J. Archer\\Virginia Commonwealth University}
+\newcommand{\bet}{\mbox{\boldmath $\beta$}}
+
+\Plainauthor{Kellie J. Archer}
+\Plaintitle{glmpathcr: An R Package for Ordinal Response Prediction in High-dimensional Data Settings}
+\Shorttitle{An \proglang{R} Package for Penalized Ordinal Response Models}
+
+\Abstract{This paper describes an \proglang{R} package, \pkg{glmpathcr}, that provides a function for fitting a penalized continuation ratio model when interest lies in predicting an ordinal response. The function, \code{glmpath.cr} uses the coordinate descent fitting algorithm as implemented in \code{glmpath} and described by \citep{Parkpaper}. Methods for extracting all estimated coefficients, extracting non-zero coefficient estimates, obtaining the predicted class, and obtaining the class-specific fitted probabilities have been implemented. Additionally, generic methods from \pkg{glmpath} including \code{summary}, \code{print}, and \code{plot} can be applied to a \code{glmpath.cr} object. }
+\Keywords{ordinal response, penalized models, LASSO, L$_1$ constraint, \proglang{R}}
+\Plainkeywords{ordinal response, penalized models, LASSO, L1 constraint, R}
+
+\Address{
+Kellie J. Archer\\
+Department of Biostatistics\\
+Virginia Commonwealth University\\
+Box 980032\\
+Richmond, VA 23298-0032\\
+E-mail: \email{kjarcher@vcu.edu}\\
+URL: \url{http://www.people.vcu.edu/~kjarcher/}
+}
+\SweaveOpts{echo=FALSE}
+\usepackage{a4wide}
+
+\begin{document}
+
+%\maketitle
+\section{Introduction}
+High-throughput genomic experiments are frequently conducted for the purpose of examining whether genes are predictive of or significantly associated with phenotype. In many biomedical settings where histopathological or health status data are collected, phenotypic variables are recorded on an ordinal scale.  Nevertheless, most often investigators neglect the ordinality of the phenotypic data and rather dichotomize the ordinal class then apply statistical methods suitable for two-class comparisons and predictions. This tendency to analyze ordinal data using dichotomous class methodologies may be due to the lack of available statistical methods and software for modeling an ordinal response in the presence of a high-dimensional covariate space. The approach of collapsing ordinal categories may neglect important information in the study  \citep{Armstrong}.
+
+A variety of statistical modeling procedures, namely, proportional odds, adjacent category, stereotype logit, and continuation ratio models can be used to predict an ordinal response. In this paper, we focus attention to the continuation ratio model because its likelihood can be easily re-expressed such that existing software can be readily used for model fitting. The backward formulation of the continuation ratio models the logit as
+\begin{equation}
+log\left(\frac{P(Y=k|X=x)}{P(Y\le k|X=x)}\right)=\alpha_k+\bet_k^T\mathbf{x}
+\end{equation}
+whereas the forward formulation models the logit as
+\begin{equation}
+log\left(\frac{P(Y=k|X=x)}{P(Y\ge k|X=x)}\right)=\alpha_k+\bet_k^T\mathbf{x}.
+\end{equation}
+Rather than describe both formulations in detail, here we present the backward formulation, which is commonly used when progression through disease states from none, mild, moderate, severe is represented by increasing integer values, and interest lies in estimating the odds of more severe disease compared to less severe disease \citep{Bender}. Suppose each observation, $i=1,\ldots,n$, belongs to one ordinal class $k=1,\ldots,K$. Therefore for $i=1,\ldots,n$ we can construct a vector $\mathbf{y}_i$ to represent ordinal class membership, such that $\mathbf{y}_i=(y_{i1}, y_{i2},\ldots, y_{iK})^T$, where $y_{ik}=1$ if the response is in category $k$ and 0 otherwise, so that  $n_i=\sum_{k=1}^Ky_{ik}=1$. Using the logit link, the equation representing the conditional probability for class $k$ is 
+\begin{equation}
+\delta_k(x)=P(Y = k |Y \le k, X= x)=\frac{exp(\alpha_k+\bet^T\mathbf{X})}{1+exp(\alpha_k+\bet^T\mathbf{X})}.
+\end{equation}
+The likelihood for the continuation ratio model is then the product of conditionally independent binomial terms \citep{Cox}, which is given by
+\begin{equation}
+L(\bet|\mathbf{y},\mathbf{x})=\prod_{i=1}^n\delta_2^{y_{i2}}(1-\delta_2)^{n_i-\sum_{k=2}^Ky_{ik}}\delta_3^{y_{i3}}(1-\delta_3)^{n_i-\sum_{k=3}^Ky_{ik}}\times\cdots\times\delta_{K}^{y_{iK}}(1-\delta_{K})^{n_i-y_{iK}}\label{crlikelihood}
+\end{equation}
+where here we have simplified our notation by not explicitly including the dependence of the conditional probability $\delta_k$ on $\mathbf{x}$. Further, simplifying our notation to let $\bet$ represent the vector containing both the thresholds $(\alpha_2,\ldots,\alpha_{K})$ and the log odds $(\beta_1,\ldots,\beta_p)$ for all $K-1$ logits, the full parameter vector is
+\begin{equation}
+\bet=(\alpha_2,\beta_{21},\beta_{22},\ldots,\beta_{2p},\alpha_3,\beta_{31},\beta_{32},\ldots,\beta_{3p},\alpha_{K},\beta_{K,1},\beta_{K,2},\ldots,\beta_{K,p})^T
+\end{equation}
+which is of length $(K-1)(p+1)$. As can be seen from equation~\ref{crlikelihood}, the likelihood can be factored into $K-1$ independent likelihoods, so that maximization of the independent likelihoods will lead to an overall maximum likelihood estimate for all terms in the model \citep{Bender}. 
+
+\section{Implementation}
+The \pkg{glmpathcr} package was written in the \proglang{R} programming environment \citep{RTeam} and depends on the \pkg{glmpath} package \citep{Park}.  Similar to the \pkg{Design} package which includes a function \code{cr.setup} for restructuring a dataset for fitting a forward continuation ratio model, in this package the model is fit by restructuring the dataset then passing the restructured dataset to a penalized logistic regression fitting function. However, unlike \code{cr.setup} which produces an object of class \code{list} from which the response and restructured independent variables are extracted and passed to a model fitting algorithm, in the \pkg{glmpathcr} package the restructuring functions are transparent to the user. Specifically, the \pkg{glmpathcr} package fits either a forward or backward (default) penalized constrained continuation ratio model by specification of \code{method="forward"} in the \code{glmpath.cr} call.   The \code{glmpath.cr} function restructures the dataset to represent the $K-1$ conditionally independent likelihoods and then fits the penalized continuation ratio model using the \pkg{glmpath} framework. Therefore, the coordinate descent fitting procedure used by the \code{glmpath} function in the \pkg{glmpath} package are used in fitting the penalized continuation ratio model when invoking \code{glmpath.cr}.  This allows fitting a penalized model for situations where the number of covariates $p$ exceed the sample size $n$.  In addition, methods for extracting the best fitting model from the path using AIC and BIC criteria, obtaining predicted class and fitted class probabilities, and returning coefficient estimates were written in addition to the \code{print}, \code{summary}, and \code{plot} methods copied from \pkg{glmpath}.
+
+\section{Example}
+A simulated dataset, \code{data}, consisting of 1,000 covariates and a three-class ordinal response with 30 observations in each class is included in the \pkg{glmpath} package for testing ordinal classification methodologies. The first column (\code{V1}) is stochastically associated with the ordinal response: for class 0, \code{V1} is distributed as N(0,1); for class 1, \code{V1} is distributed as N(1.5,1); and for class 2, \code{V1} is distributed as N(3,1). All other predictor variables (\code{V2}-\code{V1000}) are multivariable normally distributed with mean vector $\mathbf{0}$ and variance-covariance matrix $\mathbf{I}$. Therefore the Bayes Error associated with this dataset is 0.302. The last column in \code{data} is the ordinal response, \code{class}. The code for fitting a backward (default) continuation ratio model is given by
+<<echo=TRUE>>=
+library(glmpathcr)
+data(data)
+x <- data[,1:1000]
+y <- data$class
+fit <- glmpath.cr(x,y)
+@
+As with \code{glmpath} model objects, methods such as \code{summary} and \code{plot} can be applied to \code{glmpath.cr} model objects, which are helpful for selecting the step at which to select the final model from the solution path. 
+<<echo=TRUE>>=
+summary(fit)
+plot(fit, xvar = "step", type = "bic", plot.all.steps=TRUE, breaks = FALSE)
+@
+\begin{figure}[htbp]
+  \begin{center}
+<<fig=TRUE>>=
+plot(fit, xvar = "step", type = "bic", plot.all.steps=TRUE, breaks = FALSE)
+@
+    \caption{Plot of regularization path for \code{glmpath.cr} object using simulated dataset, \code{data}.}
+  \end{center}
+\end{figure}
+Note that when plotting, the horizontal axis can be \code{norm}, \code{lambda}, or \code{step}, however extractor functions for \code{glmpath.cr} generally require the step to be selected, so we have selected \code{xvar = "step"} in this example. The vertical axis can be coefficients, aic or bic. As one can see, there is a multitude of models fit from one call to \code{glmpath.cr}. To faciliate extraction of best fitting models using commonly used criterion, the \code{model.select} function can be used. The \code{model.select} function extracts the best fitting model from the solution path, where the \code{which} parameter allows one to select either AIC or by default, BIC.
+<<echo=TRUE>>=
+BIC.step <- model.select(fit)
+BIC.step
+@
+In this example, Step 7 corresponds to a 4 degree of freedom model having the minimum BIC of 146.9339.
+
+The \code{coef} function returns all estimated coefficients for a \code{glmpath.cr} fitted model, where the model selected is indicated by step \code{s}. The \code{nonzero.coef} function returns only those non-zero coefficient estimates for a selected model.   
+<<echo=TRUE>>=
+coefficients<-coef(fit, s=BIC.step)
+sum(coefficients!=0)
+nonzero.coef(fit, s=BIC.step)
+@
+Note that the \code{glmpath.cr} function fits a penalized constrained continuation ratio model; therefore for $K$ classes, there will be $K-1$ intercepts representing the cutpoints between adjacent classes. In this package, the nomenclature for these cutpoints is to use "cp\textit{k}" where $k=1,\ldots,K-1$. In this dataset, $K=3$ so the intercepts are \code{cp1} and \code{cp2} with \code{Intercept} being an offset. When using the BIC to select the final model, the only variables having a non-zero coefficient estimate are the truly important covariate \code{V1} along with two noise covariates \code{V285} and \code{V497}.
+
+Continuation ratio models predicts conditional probabilities so a new method to extract the fitted probabilities and predicted class was created. The \code{predict} and \code{fitted} functions are equivalent, and return either the predicted class or the fitted probabilities from the penalized continuation ratio model for a \code{glmpath.cr} object. The user is required to supply the fitted \code{glmpath.cr} model object, a data matrix \code{newx} that is either the same as the training data or an independent dataset having the same number and order of covariates as the training data, a vector \code{newy} that provides the class labels of the ordinal response. These functions extract the fitted values for the best fitting model using the BIC criteria by default, which can be changed to extracting the best fitting AIC model by supplying \code{which="AIC"}. By default, the predicted class is output. If one desired the fitted class-specific probabilities from the model, the \code{type="probs"} argument should be supplied.
+<<echo=TRUE>>=
+pred <- predict(fit, newx=x, newy=y)
+table(pred, y)
+pred <- predict(fit, newx=x, newy=y, which="AIC", type="probs")
+pred[1:10,]
+@
+
+Typically an unbiased estimate of error is desired. In this case, we can simulate a test dataset following the same procedure that was used to generate the original training set \code{data}. Afterward, we can apply the original model fit to the test set for estimating error. The \code{set.seed} function is used only to permit others to replicate these results.
+
+<<echo=TRUE>>=
+library(mvtnorm)
+set.seed(9)
+class1<-rmvnorm(30,mean=rep(0,1000),sigma=diag(1,nrow=1000))
+class2<-rmvnorm(30,mean=c(1.5,rep(0,999)),sigma=diag(1,nrow=1000))
+class3<-rmvnorm(30,mean=c(3,rep(0,999)),sigma=diag(1,nrow=1000))
+class<-rep(0:2,each=30)
+testset<-data.frame(cbind(rbind(class1,class2,class3),class))
+rm(class1, class2, class3, class)
+pred <- predict(fit, newx=testset[,1:1000], newy=testset$class)
+table(pred, testset$class)
+@
+
+For illustrative purposes, a forward continuation ratio model can be fit using the syntax
+<<echo=TRUE>>=
+fit <- glmpath.cr(x, y, method="forward")
+@
+and the predicted class can be obtained using
+<<echo=TRUE>>=
+pred <- predict(fit, newx=x, newy=y, method="forward")
+table(pred, y)
+@
+\section*{Summary}
+Herein we have described the \pkg{glmpathcr} package which works in conjunction with the \pkg{glmpath} package in the \proglang{R} programming environment.  The package provides methods for fitting either a forward or backward penalized continuation ratio model. When applied to a simulated dataset having Bayes' error of 0.302, the method reported a test set error of 0.367.  Moreover, the likelihood-based penalized continuation ratios models have been demonstrated to have good performance when applied to microarray gene expression datasets \citep{Archer} in comparison to corresponding penalized Bayesian continuation ratio models \citep{Kiiveri}. Therefore the \pkg{glmpathcr} package should be helpful when predicting an ordinal response for datasets where the number of covariates exceeds the number of available samples. 
+
+\section*{Acknowledgments}
+This research was supported by the National Institute of Library Medicine R03LM009347.
+
+\bibliography{glmpathRefs}
+
+\end{document}
+
+

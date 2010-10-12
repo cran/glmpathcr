@@ -1,0 +1,8 @@
+export(coef.glmpath.cr, cr.backward, cr.forward, nonzero.coef, fitted.glmpath.cr, glmpath.cr, model.select, plot.glmpath.cr, predict.glmpath.cr, print.glmpath.cr, summary.glmpath.cr)
+S3method(print, glmpath.cr)
+S3method(plot, glmpath.cr)
+S3method(fitted, glmpath.cr)
+S3method(predict, glmpath.cr)
+S3method(coef, glmpath.cr)
+S3method(summary, glmpath.cr)
+
