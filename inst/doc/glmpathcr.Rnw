@@ -54,7 +54,17 @@ where here we have simplified our notation by not explicitly including the depen
 \begin{equation}
 \bet=(\alpha_2,\beta_{21},\beta_{22},\ldots,\beta_{2p},\alpha_3,\beta_{31},\beta_{32},\ldots,\beta_{3p},\alpha_{K},\beta_{K,1},\beta_{K,2},\ldots,\beta_{K,p})^T
 \end{equation}
-which is of length $(K-1)(p+1)$. As can be seen from equation~\ref{crlikelihood}, the likelihood can be factored into $K-1$ independent likelihoods, so that maximization of the independent likelihoods will lead to an overall maximum likelihood estimate for all terms in the model \citep{Bender}. 
+which is of length $(K-1)(p+1)$. As can be seen from equation~\ref{crlikelihood}, the likelihood can be factored into $K-1$ independent likelihoods, so that maximization of the independent likelihoods will lead to an overall maximum likelihood estimate for all terms in the model \citep{Bender}. Typically, to promote parsimony and interpretation, the model is constrained such that for each of the $K-1$ vectors, ($\beta_{k1},\beta_{k2},\ldots,\beta_{kp}$), are equal, thus yielding a constrained continuation ratio model.
+
+\section{Penalized Models}
+For datasets where the number of covariates $p$ exceeds the sample size $n$, the backwards stepwise procedure cannot be undertaken. Furthermore, for any problem using a forward selection procedure the discrete variable inclusion process can exhibit high variance. Moreover, for high-dimensional covariate spaces, the best subset procedure is computationally prohibitive.  Two penalized methods, ridge and L$_1$ penalization, places a penalty on a function of the coefficient estimates, thereby permitting a model fit even for high-dimensional data \cite{Tibs1996, Tibs1997}. A generalization of these penalized models can be expressed as,
+\begin{equation}
+\tilde{\beta}=\arg \min_\beta(\sum_{i=1}^n(y_i-\beta_0-\sum_{j=1}^px_{ij}\beta_j)^2+\lambda\sum_{j=1}^p|\beta_j|^q)
+\end{equation}
+for $q\ge0$. When $q=1$ we have the an L$_1$ penalized model, when $q=2$ we have ridge regression. Values of $q\in (1,2)$ provide a compromise between the L$_1$ and ridge penalized models. Because when $q>1$ coefficients are no longer set exactly equal to 0, the elastic net penalty was introduced
+\begin{equation}
+\lambda\sum_{j=1}^p(\alpha\beta_j^2+(1-\alpha)|\beta_j|).
+\end{equation}
 
 \section{Implementation}
 The \pkg{glmpathcr} package was written in the \proglang{R} programming environment \citep{RTeam} and depends on the \pkg{glmpath} package \citep{Park}.  Similar to the \pkg{Design} package which includes a function \code{cr.setup} for restructuring a dataset for fitting a forward continuation ratio model, in this package the model is fit by restructuring the dataset then passing the restructured dataset to a penalized logistic regression fitting function. However, unlike \code{cr.setup} which produces an object of class \code{list} from which the response and restructured independent variables are extracted and passed to a model fitting algorithm, in the \pkg{glmpathcr} package the restructuring functions are transparent to the user. Specifically, the \pkg{glmpathcr} package fits either a forward or backward (default) penalized constrained continuation ratio model by specification of \code{method="forward"} in the \code{glmpath.cr} call.   The \code{glmpath.cr} function restructures the dataset to represent the $K-1$ conditionally independent likelihoods and then fits the penalized continuation ratio model using the \pkg{glmpath} framework. Therefore, the coordinate descent fitting procedure used by the \code{glmpath} function in the \pkg{glmpath} package are used in fitting the penalized continuation ratio model when invoking \code{glmpath.cr}.  This allows fitting a penalized model for situations where the number of covariates $p$ exceed the sample size $n$.  In addition, methods for extracting the best fitting model from the path using AIC and BIC criteria, obtaining predicted class and fitted class probabilities, and returning coefficient estimates were written in addition to the \code{print}, \code{summary}, and \code{plot} methods copied from \pkg{glmpath}.
@@ -98,9 +108,9 @@ Note that the \code{glmpath.cr} function fits a penalized constrained continuati
 
 Continuation ratio models predicts conditional probabilities so a new method to extract the fitted probabilities and predicted class was created. The \code{predict} and \code{fitted} functions are equivalent, and return either the predicted class or the fitted probabilities from the penalized continuation ratio model for a \code{glmpath.cr} object. The user is required to supply the fitted \code{glmpath.cr} model object, a data matrix \code{newx} that is either the same as the training data or an independent dataset having the same number and order of covariates as the training data, a vector \code{newy} that provides the class labels of the ordinal response. These functions extract the fitted values for the best fitting model using the BIC criteria by default, which can be changed to extracting the best fitting AIC model by supplying \code{which="AIC"}. By default, the predicted class is output. If one desired the fitted class-specific probabilities from the model, the \code{type="probs"} argument should be supplied.
 <<echo=TRUE>>=
-pred <- predict(fit, newx=x, newy=y)
+pred <- predict(fit)
 table(pred, y)
-pred <- predict(fit, newx=x, newy=y, which="AIC", type="probs")
+pred <- predict(fit, which="AIC", type="probs")
 pred[1:10,]
 @
 
@@ -115,7 +125,7 @@ class3<-rmvnorm(30,mean=c(3,rep(0,999)),sigma=diag(1,nrow=1000))
 class<-rep(0:2,each=30)
 testset<-data.frame(cbind(rbind(class1,class2,class3),class))
 rm(class1, class2, class3, class)
-pred <- predict(fit, newx=testset[,1:1000], newy=testset$class)
+pred <- predict(fit, newx=testset[,1:1000])
 table(pred, testset$class)
 @
 
@@ -125,7 +135,7 @@ fit <- glmpath.cr(x, y, method="forward")
 @
 and the predicted class can be obtained using
 <<echo=TRUE>>=
-pred <- predict(fit, newx=x, newy=y, method="forward")
+pred <- predict(fit)
 table(pred, y)
 @
 \section*{Summary}

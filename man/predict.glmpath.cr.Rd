@@ -11,15 +11,13 @@ Returns either the predicted class or the fitted probabilities from the penalize
 }
 
 \usage{
-\method{predict}{glmpath.cr}(object, newx, newy, method="backward", which = "BIC", type = "class", ...)
-\method{fitted}{glmpath.cr}(object, newx, newy, method="backward", which = "BIC", type = "class", ...)
+\method{predict}{glmpath.cr}(object, newx = NULL, which = "BIC", type = "class", ...)
+\method{fitted}{glmpath.cr}(object, newx = NULL, which = "BIC", type = "class", ...)
 }
 
 \arguments{
   \item{object}{a \code{glmpath.cr} object}
-  \item{newx}{a data matrix containing the predictor variables}
-  \item{newy}{the ordinal response vector}
-  \item{method}{whether \code{backward} (default) or \code{forward} continuation ratio model was fit for \code{object}}
+  \item{newx}{a data matrix containing the predictor variables, if NULL, the original training data is used for getting model predictions}
   \item{which}{used for model selection, either the default \code{which}="BIC" or \code{which}="AIC"}
   \item{type}{used for selecting desired output, either the default \code{type}="class" or \code{type}="probes" for the fitted probabilities}
   \item{\dots}{additional optional arguments}

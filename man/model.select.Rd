@@ -4,7 +4,7 @@
 Step of Optimal Fitted AIC or BIC CR Model.
 }
 \description{
-This function returns the step number associated with the minimum AIC and BIC models for a \code{glmpath.cr} object and so can be used in selecting the step number for calls to functions such as \code{coef.glmpath.cr}, \code{effect.glmpath.cr}, and \code{predict.glmpath.cr}.
+This function returns the step number associated with the minimum AIC and BIC models for a \code{glmpath.cr} object and so can be used in selecting the step number for calls to functions such as \code{coef.glmpath.cr} and \code{predict.glmpath.cr}.
 }
 \usage{
 model.select(object, which = "BIC")
@@ -18,9 +18,6 @@ model.select(object, which = "BIC")
 \value{
 A numeric value of length one representing the step number
 }
-\references{
-Kellie J. Archer and Andre A.A. Williams (2010) Technical Report.
-}
 \author{
 Kellie J. Archer, \email{kjarcher@vcu.edu}
 }
@@ -33,4 +30,4 @@ data(data)
 fit <- glmpath.cr(x = data[,1:1000], y = data$class)
 model.select(fit, which="AIC")
 }
-\keyword{ methods }
+\keyword{ misc }

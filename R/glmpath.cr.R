@@ -17,6 +17,9 @@ function(x,y,data,method="backward",weight = rep(1, n), offset = rep(0, n), lamb
 	}		
    glmpath.data<-list(x=restructure[,-1],y=restructure[,"y"])
    object<-glmpath(x, y, data=glmpath.data, family=binomial, standardize=TRUE, nopenalty.subset=(p+1):(p+k-1))
+   object$x<-x
+   object$y<-y
+   object$method<-method
    class(object)<-"glmpath.cr"
    object
 }

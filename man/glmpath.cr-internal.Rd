@@ -4,7 +4,7 @@
 \alias{cr.backward}
 \alias{cr.forward}
 \title{
-Functions called by \code{glmpath.cr} functions, not by the user
+Functions called by glmpath.cr functions, not by the user
 }
 \description{
 These functions are called my other \code{glmpath.cr} functions and are not intended to be directly called by the user.

@@ -56,6 +56,9 @@ A \code{glmpath.cr} object is returned.
 \item{offset}{offset used}
 \item{nopenalty.subset}{nopenalty.subset used}
 \item{standardize}{TRUE if the predictors were standardized before fitting}
+\item{x}{the matrix of predictor variables used in fitting the model}
+\item{y}{the ordinal outcome}
+\item{method}{either \code{forward} of \code{backward} method}
 }
 \references{
 Ralf Bender and Axel Benner (2000) Calculating ordinal regression models in SAS and S-Plus. Biometrical Journal 42, 677--699.
