@@ -34,8 +34,10 @@ This function is essentially the same as \code{summary.glmpath} from the \pkg{gl
 See Also as \code{\link{predict.glmpath.cr}}, \code{\link{coef.glmpath.cr}}
 }
 \examples{
-data(data)
-fit <- glmpath.cr(x = data[,1:1000], y = data$class)
+data(diabetes)
+x <- diabetes[, 2:dim(diabetes)[2]]
+y <- diabetes$y
+fit <- glmpath.cr(x, y)
 summary(fit)
 }
 \keyword{ methods }

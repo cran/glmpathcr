@@ -37,12 +37,12 @@ Kellie J. Archer, \email{kjarcher@vcu.edu}
 See also as \code{\link{glmpath.cr}}, \code{\link{coef.glmpath.cr}}.
 }
 \examples{
-data(data)
-x <- data[,1:1000]
-y <- data$class
-fit <- glmpath.cr(x=x, y=y)
-pred <- predict(fit, newx=x, newy=y)
+data(diabetes)
+x <- diabetes[, 2:dim(diabetes)[2]]
+y <- diabetes$y
+fit <- glmpath.cr(x, y)
+pred <- predict(fit)
 table(pred, y)
-pred <- predict(fit, newx=x, newy=y, which="AIC", type="probs")
+pred <- predict(fit, which="AIC", type="probs")
 }
 \keyword{ methods }

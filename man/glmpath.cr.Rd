@@ -42,8 +42,8 @@ A \code{glmpath.cr} object is returned.
 \item{new.df}{vector of degrees of freedom (to be used in the plot function)}
 \item{df}{vector of degrees of freedom at each step}
 \item{deviance}{vector of deviance computed at each step}
-\item{aic}{vector of AIC values}
-\item{bic}{vector of BIC values}
+\item{aic}{vector of AIC values from fitted logistic regression on restructured data; use \code{summary} for AIC from continuation ratio model}
+\item{bic}{vector of BIC values from fitted logistic regression on restructured data; use \code{summary} for AIC from continuation ratio model}
 \item{b.predictor}{matrix of coefficient estimates from the predictor steps}
 \item{b.corrector}{matrix of coefficient estimates from the corrector steps}
 \item{new.A}{vector of boolean values indicating the steps at which the active set changed (to be used in the plot/predict functions)}
@@ -74,9 +74,10 @@ For further details about the fitting algorithm, see the \pkg{glmpath} package.
 See also as \code{\link{predict.glmpath.cr}}, \code{\link{coef.glmpath.cr}}
 }
 \examples{
-data(data)
-fit <- glmpath.cr(x = data[,1:1000], y = data$class)
-predict(fit, newx = data[,1:1000], newy = data$class)
+data(diabetes)
+x <- diabetes[, 2:dim(diabetes)[2]]
+y <- diabetes$y
+fit <- glmpath.cr(x, y)
 }
 \keyword{ models }
 \keyword{ classif }

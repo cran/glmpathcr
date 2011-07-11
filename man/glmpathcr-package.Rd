@@ -11,8 +11,8 @@ This package provides a function glmpath.cr for fitting a penalized L1 continuat
 \tabular{ll}{
 Package: \tab glmpathcr\cr
 Type: \tab Package\cr
-Version: \tab 1.0\cr
-Date: \tab 2010-09-23\cr
+Version: \tab 1.0.2\cr
+Date: \tab 2011-06-23\cr
 License: \tab GPL2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -34,6 +34,8 @@ Kellie J. Archer and Andre A.A. Williams (2010) Technical Report.
    See also \code{\link[glmpath:glmpath]{glmpath}}
 }
 \examples{
-data(data)
-fit<-glmpath.cr(x=data[,1:1000],y=data$class)
+data(diabetes)
+x <- diabetes[, 2:dim(diabetes)[2]]
+y <- diabetes$y
+fit <- glmpath.cr(x, y)
 }

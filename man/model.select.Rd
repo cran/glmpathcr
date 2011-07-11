@@ -26,8 +26,10 @@ Kellie J. Archer, \email{kjarcher@vcu.edu}
 See also as \code{\link{coef.glmpath.cr}}, \code{\link{predict.glmpath.cr}}
 }
 \examples{
-data(data)
-fit <- glmpath.cr(x = data[,1:1000], y = data$class)
+data(diabetes)
+x <- diabetes[, 2:dim(diabetes)[2]]
+y <- diabetes$y
+fit <- glmpath.cr(x, y)
 model.select(fit, which="AIC")
 }
 \keyword{ misc }

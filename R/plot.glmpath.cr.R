@@ -1,17 +1,13 @@
 plot.glmpath.cr <-
 function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients", 
-    "aic", "bic"), plot.all.steps = FALSE, xlimit = NULL, predictor = FALSE, 
-    omit.zero = TRUE, breaks = TRUE, mar = NULL, eps = .Machine$double.eps, 
+    "aic", "bic"), xlimit = NULL, predictor = FALSE, 
+    omit.zero = TRUE, breaks = FALSE, mar = NULL, eps = .Machine$double.eps, 
     main = NULL, ...) 
 {
     object <- x
     ii <- object$new.A
-    if (plot.all.steps) {
-        ii[!ii] <- TRUE
-    }
-    else {
-        ii[length(ii)] <- TRUE
-    }
+	ii[length(ii)] <- TRUE
+	summary.object<-summary(object)
     lam <- object$lambda[ii]
     xvar <- match.arg(xvar)
     type <- match.arg(type)
@@ -30,7 +26,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
     s <- switch(xvar, norm = if (is.null(object$nopenalty.subset)) 
         apply(abs(coef.corr), 1, sum)
     else apply(abs(coef.corr[, -object$nopenalty.subset, drop = FALSE]), 
-        1, sum), lambda = lam, step = seq(k))
+        1, sum), lambda = lam, step = as.numeric(gsub("Step ","",dimnames(summary.object)[[1]])))
     if (xvar != "lambda") {
         if (is.null(xlimit)) 
             xlimit <- max(s)
@@ -51,7 +47,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
     if (!is.null(mar)) 
         par(mar = mar)
     if (type == "aic") {
-        aic <- object$aic[ii][xi]
+        aic <- summary.object$AIC
         plot(s[xi], aic, xlab = xname, ylab = "AIC", type = "b", 
             pch = 16, cex = 0.3, ...)
         if (is.null(main)) 
@@ -59,7 +55,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
         else title(main, line = 2.5)
     }
     else if (type == "bic") {
-        bic <- object$bic[ii][xi]
+        bic <- summary.object$BIC
         plot(s[xi], bic, xlab = xname, ylab = "BIC", type = "b", 
             pch = 16, cex = 0.3, ...)
         if (is.null(main)) 
