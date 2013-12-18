@@ -6,7 +6,11 @@ Fit Penalized Continuation Ratio Model
 \description{
 This function fits a penalized backward (default) or forward continuation ratio model using the glmpath framework.}
 \usage{
-glmpath.cr(x, y, data, method="backward", weight = rep(1, n), offset = rep(0, n), lambda2 = 1e-05, max.steps = 10 * min(n, m), max.norm = 100 * m, min.lambda = (if (m >= n) 1e-06 else 0), max.vars = Inf, max.arclength = Inf, frac.arclength = 1, add.newvars = 1, bshoot.threshold = 0.1, relax.lambda = 1e-08, standardize = TRUE, function.precision = 3e-13, eps = .Machine$double.eps, trace = FALSE)
+glmpath.cr(x, y, data, method="backward", weight = rep(1, n), offset = rep(0, n), 
+lambda2 = 1e-05, max.steps = 10 * min(n, m), max.norm = 100 * m, 
+min.lambda = (if (m >= n) 1e-06 else 0), max.vars = Inf, max.arclength = Inf, 
+frac.arclength = 1, add.newvars = 1, bshoot.threshold = 0.1, relax.lambda = 1e-08, 
+standardize = TRUE, function.precision = 3e-13, eps = .Machine$double.eps, trace = FALSE)
 }
 \arguments{
   \item{x}{a matrix of predictor variables}

@@ -7,7 +7,10 @@ Plots the Regularization Path Computed from glmpath.cr
 This function takes a \code{glmpath.cr} object and visualizes the regularization path. The horizontal axis can be \code{norm}, \code{lambda} or \code{step}. The vertical axis can be \code{coefficients}, \code{aic} or \code{bid}.
 }
 \usage{
-\method{plot}{glmpath.cr}(x, xvar = c("norm", "lambda", "step"), type = c("coefficients", "aic", "bic"), xlimit = NULL, predictor = FALSE, omit.zero = TRUE, breaks = FALSE, mar = NULL, eps = .Machine$double.eps, main = NULL, ...)
+\method{plot}{glmpath.cr}(x, xvar = c("norm", "lambda", "step"), 
+type = c("coefficients", "aic", "bic"), xlimit = NULL, predictor = FALSE, 
+omit.zero = TRUE, breaks = FALSE, mar = NULL, eps = .Machine$double.eps, 
+main = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
