@@ -1,6 +1,5 @@
 \name{glmpathcr-package}
 \alias{glmpathcr-package}
-\alias{glmpathcr}
 \docType{package}
 \title{
 Penalized L1 continuation Ratio Models for Ordinal Response Prediction in High-dimensional Data Settings
@@ -11,8 +10,8 @@ This package provides a function glmpath.cr for fitting a penalized L1 continuat
 \tabular{ll}{
 Package: \tab glmpathcr\cr
 Type: \tab Package\cr
-Version: \tab 1.0.2\cr
-Date: \tab 2011-06-23\cr
+Version: \tab 1.0.4\cr
+Date: \tab 2017-09-07\cr
 License: \tab GPL2.0\cr
 LazyLoad: \tab yes\cr
 }
@@ -21,10 +20,10 @@ This package contains functions for fitting a penalized continuation ratio model
 \author{
 Kellie J. Archer
 
-Maintainer: Kellie J. Archer <kjarcher@vcu.edu>
+Maintainer: Kellie J. Archer <archer.43@osu.edu>
 }
 \references{
-Kellie J. Archer and Andre A.A. Williams (2010) Technical Report.
+Archer K.J., Williams A.A.A. (2012) L1 penalized continuation ratio models for ordinal response prediction using high-dimensional datasets. \emph{Statistics in Medicine}, 31(14), 1464-74.
 }
 \keyword{ package }
 \keyword{ models }
@@ -37,5 +36,5 @@ Kellie J. Archer and Andre A.A. Williams (2010) Technical Report.
 data(diabetes)
 x <- diabetes[, 2:dim(diabetes)[2]]
 y <- diabetes$y
-fit <- glmpath.cr(x, y)
+fit <- glmpathcr(x, y)
 }

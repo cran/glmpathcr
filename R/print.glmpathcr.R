@@ -1,4 +1,4 @@
-print.glmpath.cr <-
+print.glmpathcr <-
 function (x, ...) 
 {
     cat("Call:\n")

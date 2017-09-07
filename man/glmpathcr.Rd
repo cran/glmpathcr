@@ -1,12 +1,12 @@
-\name{glmpath.cr}
-\alias{glmpath.cr}
+\name{glmpathcr}
+\alias{glmpathcr}
 \title{
 Fit Penalized Continuation Ratio Model
 }
 \description{
 This function fits a penalized backward (default) or forward continuation ratio model using the glmpath framework.}
 \usage{
-glmpath.cr(x, y, data, method="backward", weight = rep(1, n), offset = rep(0, n), 
+glmpathcr(x, y, data, method="backward", weight = rep(1, n), offset = rep(0, n), 
 lambda2 = 1e-05, max.steps = 10 * min(n, m), max.norm = 100 * m, 
 min.lambda = (if (m >= n) 1e-06 else 0), max.vars = Inf, max.arclength = Inf, 
 frac.arclength = 1, add.newvars = 1, bshoot.threshold = 0.1, relax.lambda = 1e-08, 
@@ -35,10 +35,10 @@ standardize = TRUE, function.precision = 3e-13, eps = .Machine$double.eps, trace
   \item{trace}{If \code{TRUE}, the algorithm prints out its progress}
 }
 \details{
-The \code{glmpath.cr} function is largely borrowed from the \pkg{glmpath} package and differs only in that (1) the ordinal dataset is first restructured to represent the K-1 conditionally independent likelihoods and (2) the family is specified to be binomial and the \code{nopenalty.subset} is specified to be the thresholds for the ordinal classes.
+The \code{glmpathcr} function is largely borrowed from the \pkg{glmpath} package and differs only in that (1) the ordinal dataset is first restructured to represent the K-1 conditionally independent likelihoods and (2) the family is specified to be binomial and the \code{nopenalty.subset} is specified to be the thresholds for the ordinal classes.
 }
 \value{
-A \code{glmpath.cr} object is returned.
+A \code{glmpathcr} object is returned.
 \item{lambda}{vector of \eqn{\lambda} values for which the exact coefficients are computed}
 \item{lambda2}{\eqn{\lambda_2} used}
 \item{step.length}{vector of step lengths in \eqn{\lambda}}
@@ -75,13 +75,13 @@ For further details about the fitting algorithm, see the \pkg{glmpath} package.
 }
 
 \seealso{
-See also as \code{\link{predict.glmpath.cr}}, \code{\link{coef.glmpath.cr}}
+See also as \code{\link{predict.glmpathcr}}, \code{\link{coef.glmpathcr}}
 }
 \examples{
 data(diabetes)
 x <- diabetes[, 2:dim(diabetes)[2]]
 y <- diabetes$y
-fit <- glmpath.cr(x, y)
+fit <- glmpathcr(x, y)
 }
 \keyword{ models }
 \keyword{ classif }

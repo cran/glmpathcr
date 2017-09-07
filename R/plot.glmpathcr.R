@@ -1,4 +1,4 @@
-plot.glmpath.cr <-
+plot.glmpathcr <-
 function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients", 
     "aic", "bic"), xlimit = NULL, predictor = FALSE, 
     omit.zero = TRUE, breaks = FALSE, mar = NULL, eps = .Machine$double.eps, 

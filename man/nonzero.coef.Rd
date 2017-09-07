@@ -11,7 +11,7 @@ nonzero.coef(object, s)
 }
 
 \arguments{
-  \item{object}{a \code{glmpath.cr} object}
+  \item{object}{a \code{glmpathcr} object}
   \item{s}{the step at which the non-zero coefficient estimates are desired}
 }
 
@@ -20,20 +20,19 @@ A vector of estimated coefficients is returned.  The \code{nonzero.coef} functio
 }
 
 \author{
-Kellie J. Archer, \email{kjarcher@vcu.edu}
+Kellie J. Archer, \email{archer.43@osu.edu}
 }
 
 \seealso{
-See also as \code{\link{glmpath.cr}}, \code{\link{coef.glmpath.cr}}
+See also as \code{\link{glmpathcr}}, \code{\link{coef.glmpathcr}}
 }
 
 \examples{
 data(diabetes)
 x <- diabetes[, 2:dim(diabetes)[2]]
 y <- diabetes$y
-fit <- glmpath.cr(x, y)
+fit <- glmpathcr(x, y)
 step <- model.select(fit, which="BIC")
-coef(fit, s = step)
 nonzero.coef(fit, s = step)
 }
 \keyword{ misc }

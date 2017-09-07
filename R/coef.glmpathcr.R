@@ -1,4 +1,4 @@
-coef.glmpath.cr <-
+coef.glmpathcr <-
 function (object, s, weight = NULL,  
     eps = .Machine$double.eps, ...) 
 {

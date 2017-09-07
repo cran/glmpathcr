@@ -1,4 +1,4 @@
-fitted.glmpath.cr<-
+fitted.glmpathcr<-
 function (object, newx=NULL, which = "BIC", type = "class", ...) 
 {
     summary.glmpath <- summary(object)

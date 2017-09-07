@@ -1,20 +1,20 @@
-\name{plot.glmpath.cr}
-\alias{plot.glmpath.cr}
+\name{plot.glmpathcr}
+\alias{plot.glmpathcr}
 \title{
-Plots the Regularization Path Computed from glmpath.cr
+Plots the Regularization Path Computed from glmpathcr
 }
 \description{
-This function takes a \code{glmpath.cr} object and visualizes the regularization path. The horizontal axis can be \code{norm}, \code{lambda} or \code{step}. The vertical axis can be \code{coefficients}, \code{aic} or \code{bid}.
+This function takes a \code{glmpathcr} object and visualizes the regularization path. The horizontal axis can be \code{norm}, \code{lambda} or \code{step}. The vertical axis can be \code{coefficients}, \code{aic} or \code{bid}.
 }
 \usage{
-\method{plot}{glmpath.cr}(x, xvar = c("norm", "lambda", "step"), 
+\method{plot}{glmpathcr}(x, xvar = c("norm", "lambda", "step"), 
 type = c("coefficients", "aic", "bic"), xlimit = NULL, predictor = FALSE, 
 omit.zero = TRUE, breaks = FALSE, mar = NULL, eps = .Machine$double.eps, 
 main = NULL, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a \code{glmpath.cr} object}
+  \item{x}{a \code{glmpathcr} object}
   \item{xvar}{horizontal axis. \code{xvar=norm} plots against the L1 norm of the coefficients (to which L1 norm penalty was applied); \code{xvar=lambda} plots against \eqn{\lambda}; and \code{xvar=step} plots against the number of steps taken. Default is \code{norm}.}
   \item{type}{type of the plot, or the vertical axis. Default is \code{coefficients}.}
   \item{xlimit}{When the user wants to visualize a (beginning) sub-part of the plot, \code{limit} sets an upper limit to the L1 norm or the number of steps, or a lower limit to \eqn{\lambda}.}
@@ -30,20 +30,20 @@ main = NULL, ...)
 Mee Young Park and Trevor Hastie (2007) L1 regularization path algorithm for generalized linear models. J. R. Statist. Soc. B, 69, 659-677.
 }
 \note{
-This function is essentially the same as \code{plot.glmpath} from the \pkg{glmpath} package by Park and Hastie but was designed to operate on a returned \code{glmpath.cr} object.
+This function is essentially the same as \code{plot.glmpath} from the \pkg{glmpath} package by Park and Hastie but was designed to operate on a returned \code{glmpathcr} object.
 }
 \author{
-Mee Young Park and Trevor Hastie; Kellie J. Archer \email{kjarcher@vcu.edu} used here for new \code{glmpath.cr} class
+Mee Young Park and Trevor Hastie; Kellie J. Archer \email{archer.43@osu.edu} used here for new \code{glmpathcr} class
 }
 
 \seealso{
-See also \code{\link{glmpath.cr}}, \code{\link{predict.glmpath.cr}}
+See also \code{\link{glmpathcr}}, \code{\link{predict.glmpathcr}}
 }
 \examples{
 data(diabetes)
 x <- diabetes[, 2:dim(diabetes)[2]]
 y <- diabetes$y
-fit <- glmpath.cr(x, y)
+fit <- glmpathcr(x, y)
 plot(fit, xvar="step")
 }
 \keyword{ methods }

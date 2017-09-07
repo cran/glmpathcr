@@ -1,4 +1,4 @@
-summary.glmpath.cr <-
+summary.glmpathcr <-
 function (object, ...) 
 {
     ii <- object$new.A
@@ -8,7 +8,7 @@ function (object, ...)
 	if(is.numeric(y) && min(y)<=0) y<-abs(min(y))+as.numeric(levels(as.factor(y)))+1
 	newx<-object$x
 	method <- object$method
-	j <- length(unique(y))  ### k in predict.glmpath.cr
+	j <- length(unique(y))  ### k in predict.glmpathcr
 	if (class(newx)=="numeric") newx<-matrix(newx,ncol=dim(object$x)[2])
 	n <- dim(newx)[1]
 	p <- dim(newx)[2]
