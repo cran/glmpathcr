@@ -8,3 +8,13 @@
   \item Housekeeping: Cleaned up the DESCRIPTION, NAMESPACE, and URLs in help files.
   }
 }
+\section{Changes in version 1.0.5}{
+\itemize{
+  \item Updated package author's and package maintainer's email address.
+}
+}
+\section{Changes in version 1.0.6}{
+\itemize{
+  \item Edited glmpathcr-package.Rd to be in sync with the rest of the package.
+}
+}

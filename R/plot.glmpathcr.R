@@ -65,7 +65,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
     else {
         ylab <- ifelse(object$standardize, "Standardized coefficients", 
             "Coefficients")
-        matplot(s[xi], coef.corr[xi, ], xlab = xname, ..., type = "b", 
+        matplot(as.matrix(s[xi],nrow=length(s[xi])), coef.corr[xi, ], xlab = xname, ..., type = "b", 
             pch = "*", ylab = ylab, lty = 1)
         if (is.null(main)) 
             title("Coefficient path", line = 2.5)
