@@ -18,3 +18,10 @@
   \item Edited glmpathcr-package.Rd to be in sync with the rest of the package.
 }
 }
+\section{Changes in version 1.0.7}{
+\itemize{
+  \item Added nopenalty parameter to glmpathcr fitting function so a user can indicate the indices of predictor variables that should not be penalized.
+  \item Added a check for ordered factor outcome in the predict function.
+  \item Added a check to ensure number of steps and row dimension of coefficients match for trace plot.
+}
+}

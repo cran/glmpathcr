@@ -11,9 +11,9 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
     lam <- object$lambda[ii]
     xvar <- match.arg(xvar)
     type <- match.arg(type)
-    coef.pred <- scale(object$b.predictor[ii, -1], FALSE, 1/object$sdx)
-    coef.corr <- scale(object$b.corrector[ii, -1], FALSE, 1/object$sdx)
-    xnames <- object$xnames[-1]
+    coef.pred <- scale(object$b.predictor[ii, -c(grep("Intercept",colnames(object$b.corrector)), grep("^cp.",colnames(object$b.corrector)))], FALSE, 1/object$sdx[-grep("^cp.",names(object$sdx))])
+    coef.corr <- scale(object$b.corrector[ii, -c(grep("Intercept",colnames(object$b.corrector)), grep("^cp.",colnames(object$b.corrector)))], FALSE, 1/object$sdx[-grep("^cp.",names(object$sdx))])
+    xnames <- object$xnames[-c(grep("Intercept",object$xnames), grep("^cp.",object$xnames))]
     if (omit.zero) {
         c1 <- drop(rep(1, nrow(coef.corr)) %*% abs(coef.corr))
         nonzero <- c1 > eps
@@ -33,8 +33,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
         else if (xlimit <= min(s)) 
             stop("Increase xlimit.")
         xi <- s <= xlimit
-    }
-    else {
+    } else {
         if (is.null(xlimit)) 
             xlimit <- min(s)
         else if (xlimit >= max(s)) 
@@ -48,7 +47,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
         par(mar = mar)
     if (type == "aic") {
         aic <- summary.object$AIC
-        plot(s[xi], aic, xlab = xname, ylab = "AIC", type = "b", 
+        plot(s, aic, xlab = xname, ylab = "AIC", type = "b", 
             pch = 16, cex = 0.3, ...)
         if (is.null(main)) 
             title("AIC", line = 2.5)
@@ -56,7 +55,7 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
     }
     else if (type == "bic") {
         bic <- summary.object$BIC
-        plot(s[xi], bic, xlab = xname, ylab = "BIC", type = "b", 
+        plot(s, bic, xlab = xname, ylab = "BIC", type = "b", 
             pch = 16, cex = 0.3, ...)
         if (is.null(main)) 
             title("BIC", line = 2.5)
@@ -65,7 +64,8 @@ function (x, xvar = c("norm", "lambda", "step"), type = c("coefficients",
     else {
         ylab <- ifelse(object$standardize, "Standardized coefficients", 
             "Coefficients")
-        matplot(as.matrix(s[xi],nrow=length(s[xi])), coef.corr[xi, ], xlab = xname, ..., type = "b", 
+        if (length(s)!=dim(coef.corr)[1]) stop("dimension of coefficient matrix must match the number of steps")
+        matplot(s, coef.corr, xlab = xname, ..., type = "b", 
             pch = "*", ylab = ylab, lty = 1)
         if (is.null(main)) 
             title("Coefficient path", line = 2.5)

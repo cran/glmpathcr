@@ -65,7 +65,13 @@ function (object, newx=NULL, which = "BIC", type = "class", ...)
         if (n==1) pi[, k] <- 1 - sum(pi[, 1:(k - 1)]) else pi[, k] <- 1 - apply(pi[, 1:(k - 1)], 1, sum)
     }
 	p.class <- apply(pi, 1, which.max)
-	if (sum(match(class(object$y), "factor"),na.rm=TRUE)>0) class<-levels(object$y)[p.class] else class<-p.class
+	if (sum(match(class(object$y), "factor"),na.rm=TRUE)>0) {
+		class<-levels(object$y)[p.class]
+		class <- ordered(class, levels=levels(object$y))
+	}
+	else if (sum(match(class(object$y), "factor"),na.rm=TRUE)>0) 
+		class<-levels(object$y)[p.class]
+	else class<-p.class
     if (sum(match(class(object$y), "factor"),na.rm=TRUE)>0) dimnames(pi)[[2]] <-levels(object$y) else dimnames(pi)[[2]] <- unique(object$y)
     if (c("class", "probs")[charmatch(type, c("class", "probs"))] == 
         "class") {

@@ -4,7 +4,7 @@ function(x,y,data=NULL,method="backward",weight = rep(1, n), offset = rep(0, n),
         n) 1e-06 else 0), max.vars = Inf, max.arclength = Inf, 
     frac.arclength = 1, add.newvars = 1, bshoot.threshold = 0.1, 
     relax.lambda = 1e-08, standardize = TRUE, function.precision = 3e-13, 
-    eps = .Machine$double.eps, trace = FALSE) {
+    eps = .Machine$double.eps, trace = FALSE, nopenalty=NULL) {
     if (!is.null(data)) {
     	x<-data$x
     	y<-data$y
@@ -22,7 +22,12 @@ function(x,y,data=NULL,method="backward",weight = rep(1, n), offset = rep(0, n),
 	}		
    glmpath.data<-list(x=restructure[,-c(1,2)],y=restructure[,"y"])
    weight <- restructure[,"weight"]
-   object<-glmpath(x, y, weight=weight, data=glmpath.data, family=binomial, standardize=TRUE, nopenalty.subset=(p+1):(p+k-1))
+    if (is.null(nopenalty)) {
+        nopenalty.subset = (p +  1):(p + k - 1)
+    } else {
+        nopenalty.subset = c((p +  1):(p + k - 1),nopenalty)
+    }
+   object<-glmpath(x, y, weight=weight, data=glmpath.data, family=binomial, standardize=TRUE, nopenalty.subset=nopenalty.subset)
    object$x<-x
    object$y<-y
    object$method<-method

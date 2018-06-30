@@ -10,7 +10,8 @@ glmpathcr(x, y, data, method="backward", weight = rep(1, n), offset = rep(0, n),
 lambda2 = 1e-05, max.steps = 10 * min(n, m), max.norm = 100 * m, 
 min.lambda = (if (m >= n) 1e-06 else 0), max.vars = Inf, max.arclength = Inf, 
 frac.arclength = 1, add.newvars = 1, bshoot.threshold = 0.1, relax.lambda = 1e-08, 
-standardize = TRUE, function.precision = 3e-13, eps = .Machine$double.eps, trace = FALSE)
+standardize = TRUE, function.precision = 3e-13, eps = .Machine$double.eps, trace = FALSE, 
+nopenalty=NULL)
 }
 \arguments{
   \item{x}{a matrix of predictor variables}
@@ -33,6 +34,7 @@ standardize = TRUE, function.precision = 3e-13, eps = .Machine$double.eps, trace
   \item{function.precision}{\code{function.precision} parameter used in the internal solver. Default is \code{3e-13}. The algorithm is faster, but less accurate with relaxed, larger function precision}
   \item{eps}{effective zero}
   \item{trace}{If \code{TRUE}, the algorithm prints out its progress}
+  \item{nopenalty}{a set of indices for the predictors that are not subject to the L1 penalty}
 }
 \details{
 The \code{glmpathcr} function is largely borrowed from the \pkg{glmpath} package and differs only in that (1) the ordinal dataset is first restructured to represent the K-1 conditionally independent likelihoods and (2) the family is specified to be binomial and the \code{nopenalty.subset} is specified to be the thresholds for the ordinal classes.
