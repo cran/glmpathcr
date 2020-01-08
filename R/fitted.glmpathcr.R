@@ -6,7 +6,7 @@ function (object, newx=NULL, which = "BIC", type = "class", ...)
 	if (is.null(newx)) newx<-object$x
 	method <- object$method
     k <- length(unique(newy))
-	if (class(newx)=="numeric") newx<-matrix(newx,ncol=dim(object$x)[2])
+    if (sum(class(newx)%in%"numeric")==1) newx<-matrix(newx,ncol=dim(object$x)[2])
     n <- dim(newx)[1]
     p <- dim(newx)[2]
     if (c("BIC", "AIC")[charmatch(which, c("BIC", "AIC"))] == 
@@ -38,7 +38,7 @@ function (object, newx=NULL, which = "BIC", type = "class", ...)
             if (j == k) {
                 pi[, j] <- delta[, k - 1]
             }
-            else if (class(minus.delta[, j:(k - 1)]) == "numeric") {
+            else if (sum(class(minus.delta[, j:(k - 1)])%in%"numeric")==1) {
                 pi[, j] <- delta[, j - 1] * minus.delta[, j]
             }
             else if (dim(minus.delta[, j:(k - 1)])[2] >= 2) {

@@ -25,3 +25,10 @@
   \item Added a check to ensure number of steps and row dimension of coefficients match for trace plot.
 }
 }
+\section{Changes in version 1.0.8}{
+\itemize{
+  \item Updated functions that check for class(object)=="matrix" to comply with new results in R 4.0.0 that yield a length 2 vector with "matrix" and "array".
+  \item Updated glmpathcr function to accept user-defined parameters allowable in glmpath call (e.g., max.steps, max.vars, trace, etc) except offset.  
+}
+}
+

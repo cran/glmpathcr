@@ -9,7 +9,7 @@ function(x,y,data=NULL,method="backward",weight = rep(1, n), offset = rep(0, n),
     	x<-data$x
     	y<-data$y
     }
-	n<-dim(x)[1]
+    	n <- nrow(x)
 	p<-m<-dim(x)[2]
 	k<-length(unique(y))
 	if (k==2) stop("Binary response: Use glmpath with family=binomial parameter")
@@ -27,7 +27,10 @@ function(x,y,data=NULL,method="backward",weight = rep(1, n), offset = rep(0, n),
     } else {
         nopenalty.subset = c((p +  1):(p + k - 1),nopenalty)
     }
-   object<-glmpath(x, y, weight=weight, data=glmpath.data, family=binomial, standardize=TRUE, nopenalty.subset=nopenalty.subset)
+
+   object<-glmpath(x, y, weight=weight, data=glmpath.data, family=binomial, standardize=standardize, nopenalty.subset=nopenalty.subset,
+         lambda2 = lambda2, max.steps = max.steps, max.norm = max.norm, min.lambda = min.lambda, max.vars = max.vars, max.arclength = max.arclength, 
+	 frac.arclength = frac.arclength, add.newvars  = add.newvars, bshoot.threshold = bshoot.threshold, relax.lambda = relax.lambda, trace = trace)
    object$x<-x
    object$y<-y
    object$method<-method

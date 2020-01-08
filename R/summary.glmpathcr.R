@@ -9,7 +9,7 @@ function (object, ...)
 	newx<-object$x
 	method <- object$method
 	j <- length(unique(y))  ### k in predict.glmpathcr
-	if (class(newx)=="numeric") newx<-matrix(newx,ncol=dim(object$x)[2])
+	if (sum(class(newx)%in%"numeric")==1) newx<-matrix(newx,ncol=dim(object$x)[2])
 	n <- dim(newx)[1]
 	p <- dim(newx)[2]
 	y.mat<-matrix(0,nrow=n,ncol=j)
@@ -37,7 +37,7 @@ function (object, ...)
 				if (h == j) {
 					pi[,h,i] <- delta[, j - 1]
 				}
-				else if (class(minus.delta[, h:(j - 1)]) == "numeric") {
+				else if (sum(class(minus.delta[, h:(j - 1)])%in%"numeric")==1) {
 					pi[,h,i] <- delta[, h - 1] * minus.delta[, h]
 				}
 				else if (dim(minus.delta[, h:(j - 1)])[2] >= 2) {
@@ -67,14 +67,14 @@ function (object, ...)
 		if (c("backward", "forward")[charmatch(method, c("backward", 
 														 "forward"))] == "backward") {
 			for (h in 1:(j-1)) {
-				if (class(y.mat[,1:h])=="matrix") ylth<-apply(y.mat[,1:h],1,sum) else ylth<-y.mat[,1]
+				if (sum(class(y.mat[,1:h])%in%"matrix")==1) ylth<-apply(y.mat[,1:h],1,sum) else ylth<-y.mat[,1]
 				LL<- LL + log(delta[,h])*y.mat[,h+1]+log(1-delta[,h])*ylth
 			}
 		}
 		if (c("backward", "forward")[charmatch(method, c("backward", 
 														 "forward"))] == "forward") {
 			for (h in 1:(j-1)) {
-				if (class(y.mat[,h:j])=="matrix") ygeh<-apply(y.mat[,h:j],1,sum) else ygeh<-y.mat[,j]
+				if (sum(class(y.mat[,h:j])%in%"matrix")==1) ygeh<-apply(y.mat[,h:j],1,sum) else ygeh<-y.mat[,j]
 				LL<- LL + log(delta[,h])*y.mat[,h]+log(1-delta[,h])*ygeh
 			}
 		}
