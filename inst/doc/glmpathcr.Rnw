@@ -99,7 +99,7 @@ Note that when plotting, the horizontal axis can be \code{norm}, \code{lambda}, 
 <<echo=TRUE>>=
 BIC.step <- model.select(fit)
 BIC.step
-AIC.step <- model.select(fit)
+AIC.step <- model.select(fit, which = "AIC")
 AIC.step
 @
 In this example, the minimum BIC corresponds to a 8 degree of freedom model.

@@ -31,4 +31,9 @@
   \item Updated glmpathcr function to accept user-defined parameters allowable in glmpath call (e.g., max.steps, max.vars, trace, etc) except offset.  
 }
 }
-
+\section{Changes in version 1.0.9}{
+\itemize{
+  \item Updated help file for plot.glmpathcr.
+  \item Updated vignette to include which="AIC" for example of selecting a modeling using AIC.
+}
+}

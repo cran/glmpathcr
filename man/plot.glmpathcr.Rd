@@ -44,7 +44,7 @@ data(diabetes)
 x <- diabetes[, 2:dim(diabetes)[2]]
 y <- diabetes$y
 fit <- glmpathcr(x, y)
-plot(fit, xvar="step")
+plot(fit, xvar="norm")
 }
 \keyword{ methods }
 

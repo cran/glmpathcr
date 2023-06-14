@@ -31,7 +31,7 @@ plot(fit, xvar = "step", type = "bic")
 ###################################################
 BIC.step <- model.select(fit)
 BIC.step
-AIC.step <- model.select(fit)
+AIC.step <- model.select(fit, which = "AIC")
 AIC.step
 
 
