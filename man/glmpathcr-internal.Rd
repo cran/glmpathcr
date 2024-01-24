@@ -16,10 +16,9 @@ cr.forward(x,y,weight)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a matrix of predictor variables}
+  \item{x}{a matrix of predictor variables for cr.backward and cr.forward or a fitted glmpathcr object for print}
   \item{y}{the ordinal response to be predicted}
   \item{weight}{an optional vector of weights for observations}
-  \item{fit}{a fitted \code{glmpathcr} object}
 }
 \details{
 The \code{cr.backward} and \code{cr.forward} functions restructure the original dataset to represent the K-1 conditionally independent datasets needed for the full likelihood.
